@@ -2,20 +2,16 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Bot, User, Sparkles, Trash2, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { geminiService } from "../services/geminiService";
-
-interface Message {
-  id: string;
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-}
+import { Message } from "../types";
+import { Button } from "../components/ui/Button";
+import { Card } from "../components/ui/Card";
 
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       role: "assistant",
-      content: "Hello Mahdi! I'm Absuuuun, your AI life navigator. How can I help you navigate your goals today?",
+      content: "Marhaba Mahdi! I'm Absuuuun, your AI life navigator. How can I help you navigate your goals today?",
       timestamp: new Date()
     }
   ]);
@@ -67,7 +63,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="h-[calc(100vh-12rem)] flex flex-col bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+    <Card className="h-[calc(100vh-12rem)] flex flex-col overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="flex items-center gap-3">
@@ -82,12 +78,14 @@ export default function Chat() {
             </div>
           </div>
         </div>
-        <button 
+        <Button 
+          variant="ghost" 
+          size="icon"
           onClick={() => setMessages([messages[0]])}
-          className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
+          className="text-gray-400 hover:text-red-500 hover:bg-red-50"
         >
           <Trash2 size={18} />
-        </button>
+        </Button>
       </div>
 
       {/* Messages */}
@@ -149,19 +147,20 @@ export default function Chat() {
             placeholder="Ask Absuuuun anything..."
             className="flex-1 bg-gray-50 border-none rounded-2xl px-5 py-4 text-sm focus:ring-2 focus:ring-black/5 transition-all outline-none pr-12"
           />
-          <button
+          <Button
             onClick={handleSend}
             disabled={!input.trim() || isLoading}
-            className="absolute right-2 p-2.5 bg-black text-white rounded-xl hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-black/10"
+            size="icon"
+            className="absolute right-2"
           >
             <Send size={18} />
-          </button>
+          </Button>
         </div>
         <div className="mt-3 flex items-center gap-2 px-1">
           <Sparkles size={12} className="text-amber-500" />
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Powered by Gemini AI</span>
         </div>
       </div>
-    </div>
+    </Card>
   );
 }

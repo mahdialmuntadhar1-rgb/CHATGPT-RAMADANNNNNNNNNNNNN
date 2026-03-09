@@ -1,5 +1,7 @@
 import { Settings, Moon, Sun, Globe, Lock, Eye, HelpCircle } from "lucide-react";
 import { motion } from "motion/react";
+import { Card } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
 
 export default function SettingsPage() {
   const sections = [
@@ -37,7 +39,7 @@ export default function SettingsPage() {
         {sections.map((section) => (
           <section key={section.title} className="space-y-4">
             <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest px-1">{section.title}</h3>
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+            <Card className="overflow-hidden">
               {section.items.map((item, i) => (
                 <div 
                   key={item.label} 
@@ -59,9 +61,9 @@ export default function SettingsPage() {
                     </div>
                   )}
                   {item.action === "Button" && (
-                    <button className="text-xs font-bold text-black border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                    <Button variant="outline" size="sm">
                       Manage
-                    </button>
+                    </Button>
                   )}
                   {item.action === "Select" && (
                     <div className="text-xs font-bold text-gray-400 flex items-center gap-1 cursor-pointer hover:text-black transition-colors">
@@ -70,15 +72,15 @@ export default function SettingsPage() {
                   )}
                 </div>
               ))}
-            </div>
+            </Card>
           </section>
         ))}
 
         <div className="pt-6 border-t border-gray-100 flex justify-between items-center">
           <p className="text-xs text-gray-400 font-medium">Absuuuun Version 1.0.0 (Build 2026.03)</p>
-          <button className="text-xs font-bold text-red-500 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors">
+          <Button variant="danger" size="sm">
             Delete Account
-          </button>
+          </Button>
         </div>
       </div>
     </div>

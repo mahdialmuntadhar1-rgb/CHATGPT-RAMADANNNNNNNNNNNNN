@@ -1,5 +1,7 @@
 import { User, Mail, Shield, Bell, MapPin, Camera } from "lucide-react";
 import { motion } from "motion/react";
+import { Card, CardContent, CardHeader } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
 
 export default function Profile() {
   const user = {
@@ -21,14 +23,14 @@ export default function Profile() {
       <div className="grid md:grid-cols-3 gap-8">
         {/* Left Column: Avatar & Basic Info */}
         <div className="space-y-6">
-          <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm text-center">
+          <Card className="p-8 text-center">
             <div className="relative inline-block mb-6">
               <div className="w-32 h-32 rounded-full bg-gray-100 overflow-hidden border-4 border-white shadow-xl">
                 <img src={user.avatar} alt="Avatar" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
               </div>
-              <button className="absolute bottom-0 right-0 p-2 bg-black text-white rounded-full border-2 border-white shadow-lg hover:bg-gray-800 transition-colors">
+              <Button size="icon" className="absolute bottom-0 right-0 border-2 border-white shadow-lg">
                 <Camera size={16} />
-              </button>
+              </Button>
             </div>
             <h3 className="text-xl font-bold">{user.name}</h3>
             <p className="text-emerald-600 font-bold text-xs uppercase tracking-widest mt-1">{user.role}</p>
@@ -43,20 +45,20 @@ export default function Profile() {
                 <span>Joined {user.joined}</span>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-black text-white p-6 rounded-3xl shadow-xl shadow-black/10">
+          <Card className="bg-black text-white p-6 shadow-xl shadow-black/10">
             <h4 className="font-bold mb-2">Pro Plan</h4>
             <p className="text-xs text-gray-400 mb-4 leading-relaxed">Unlock advanced AI insights and unlimited goal tracking.</p>
-            <button className="w-full py-2 bg-white text-black rounded-xl text-sm font-bold hover:bg-gray-100 transition-colors">
+            <Button variant="secondary" className="w-full">
               Upgrade Now
-            </button>
-          </div>
+            </Button>
+          </Card>
         </div>
 
         {/* Right Column: Detailed Settings */}
         <div className="md:col-span-2 space-y-6">
-          <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+          <Card className="p-8">
             <h3 className="text-lg font-bold mb-6">Account Details</h3>
             <div className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
@@ -85,13 +87,13 @@ export default function Profile() {
                 />
               </div>
 
-              <button className="px-8 py-3 bg-black text-white rounded-xl font-bold hover:bg-gray-800 transition-all">
+              <Button className="px-8">
                 Save Changes
-              </button>
+              </Button>
             </div>
-          </section>
+          </Card>
 
-          <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+          <Card className="p-8">
             <h3 className="text-lg font-bold mb-6">Security & Preferences</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl">
@@ -124,7 +126,7 @@ export default function Profile() {
                 </div>
               </div>
             </div>
-          </section>
+          </Card>
         </div>
       </div>
     </div>

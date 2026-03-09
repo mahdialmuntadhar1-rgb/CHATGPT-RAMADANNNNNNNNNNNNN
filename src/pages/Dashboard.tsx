@@ -4,26 +4,17 @@ import {
   TrendingUp, 
   Clock, 
   Plus, 
-  ArrowUpRight,
   Compass,
   Zap,
-  CheckCircle2,
-  CheckSquare
+  CheckCircle2
 } from "lucide-react";
 import { motion } from "motion/react";
-
-interface Goal {
-  id: number;
-  title: string;
-  progress: number;
-  category: string;
-}
-
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { Goal, Task } from "../types";
+import { CompassChart } from "../components/dashboard/CompassChart";
+import { GoalCard } from "../components/dashboard/GoalCard";
+import { RamadanTracker } from "../components/dashboard/RamadanTracker";
+import { Button } from "../components/ui/Button";
+import { Card, CardContent, CardHeader } from "../components/ui/Card";
 
 export default function Dashboard() {
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -40,7 +31,7 @@ export default function Dashboard() {
         const goalsData = await goalsRes.json();
         const tasksData = await tasksRes.json();
         setGoals(goalsData);
-        setTasks(tasksData.slice(0, 5)); // Show only top 5 recent tasks
+        setTasks(tasksData.slice(0, 5));
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
       } finally {
@@ -62,13 +53,13 @@ export default function Dashboard() {
       {/* Header */}
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Good morning, Mahdi.</h2>
-          <p className="text-gray-500 mt-1">Here's what's happening on your life compass today.</p>
+          <h2 className="text-3xl font-bold tracking-tight">Marhaba, Mahdi.</h2>
+          <p className="text-gray-500 mt-1">Your life compass is pointing towards growth today.</p>
         </div>
-        <button className="bg-black text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors shadow-lg shadow-black/5">
+        <Button className="gap-2">
           <Plus size={18} />
           New Goal
-        </button>
+        </Button>
       </header>
 
       {/* Stats Grid */}
@@ -79,15 +70,16 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"
           >
-            <div className={stat.color}>
-              <stat.icon size={24} />
-            </div>
-            <div className="mt-4">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
-            </div>
+            <Card className="p-6">
+              <div className={stat.color}>
+                <stat.icon size={24} />
+              </div>
+              <div className="mt-4">
+                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
+              </div>
+            </Card>
           </motion.div>
         ))}
       </div>
@@ -98,35 +90,23 @@ export default function Dashboard() {
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold flex items-center gap-2">
               <Compass size={20} className="text-emerald-500" />
-              Life Goals
+              Life Compass
             </h3>
-            <button className="text-sm font-semibold text-gray-400 hover:text-black transition-colors">View All</button>
+            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-black">View All</Button>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-6">
+            <Card className="sm:col-span-2">
+              <CardHeader>
+                <h4 className="font-bold text-sm text-gray-500 uppercase tracking-widest">Balance Overview</h4>
+              </CardHeader>
+              <CardContent>
+                <CompassChart />
+              </CardContent>
+            </Card>
+
             {goals.length > 0 ? goals.map((goal) => (
-              <div key={goal.id} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm group hover:border-black/10 transition-all">
-                <div className="flex justify-between items-start mb-4">
-                  <span className="px-3 py-1 bg-gray-100 text-[10px] font-bold uppercase tracking-wider rounded-full text-gray-500">
-                    {goal.category}
-                  </span>
-                  <ArrowUpRight size={16} className="text-gray-300 group-hover:text-black transition-colors" />
-                </div>
-                <h4 className="font-bold text-lg mb-4">{goal.title}</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs font-medium text-gray-500">
-                    <span>Progress</span>
-                    <span>{goal.progress}%</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${goal.progress}%` }}
-                      className="h-full bg-black rounded-full"
-                    />
-                  </div>
-                </div>
-              </div>
+              <GoalCard key={goal.id} goal={goal} />
             )) : (
               <div className="col-span-2 py-12 text-center bg-white rounded-2xl border border-dashed border-gray-200">
                 <p className="text-gray-400">No active goals. Start by adding one!</p>
@@ -137,14 +117,16 @@ export default function Dashboard() {
 
         {/* Recent Activity / Tasks */}
         <section className="space-y-6">
+          <RamadanTracker />
+          
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-bold flex items-center gap-2">
-              <CheckSquare size={20} className="text-blue-500" />
+              <CheckCircle2 size={20} className="text-blue-500" />
               Quick Tasks
             </h3>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+          <Card className="p-6 space-y-4">
             {tasks.length > 0 ? tasks.map((task) => (
               <div key={task.id} className="flex items-center gap-3 group">
                 <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-colors ${task.completed ? 'bg-black border-black' : 'border-gray-200 group-hover:border-gray-400'}`}>
@@ -157,21 +139,21 @@ export default function Dashboard() {
             )) : (
               <p className="text-sm text-gray-400 text-center py-4">No tasks for today.</p>
             )}
-            <button className="w-full py-3 border-2 border-dashed border-gray-100 rounded-xl text-sm font-semibold text-gray-400 hover:border-gray-200 hover:text-gray-600 transition-all mt-4">
+            <Button variant="outline" className="w-full border-dashed mt-4">
               + Add Quick Task
-            </button>
-          </div>
+            </Button>
+          </Card>
 
           {/* AI Tip Card */}
-          <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100">
+          <Card className="bg-emerald-50 border-emerald-100 p-6">
             <div className="flex items-center gap-2 text-emerald-700 mb-2">
               <TrendingUp size={18} />
               <span className="text-xs font-bold uppercase tracking-wider">AI Insight</span>
             </div>
             <p className="text-sm text-emerald-900 font-medium leading-relaxed">
-              "You're most productive between 9 AM and 11 AM. Try scheduling your 'Deep Work' for tomorrow morning."
+              "Marhaba! You've been very consistent with your Health goals. Try to balance it with some Social activities this weekend."
             </p>
-          </div>
+          </Card>
         </section>
       </div>
     </div>

@@ -2,20 +2,14 @@ import React, { useState, useEffect } from "react";
 import { 
   CheckSquare, 
   Plus, 
-  Trash2, 
   Calendar, 
-  Filter,
-  MoreVertical,
-  CheckCircle2,
-  Circle
+  Filter
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-
-interface Task {
-  id: number;
-  title: string;
-  completed: boolean;
-}
+import { AnimatePresence } from "motion/react";
+import { Task } from "../types";
+import { TaskItem } from "../components/dashboard/TaskItem";
+import { Button } from "../components/ui/Button";
+import { Card } from "../components/ui/Card";
 
 export default function Tasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -86,12 +80,12 @@ export default function Tasks() {
           <p className="text-gray-500 mt-1">Organize your day and stay on track with your goals.</p>
         </div>
         <div className="flex items-center gap-2">
-          <button className="p-2.5 bg-white border border-gray-200 rounded-xl text-gray-500 hover:text-black transition-colors">
+          <Button variant="outline" size="icon">
             <Filter size={20} />
-          </button>
-          <button className="p-2.5 bg-white border border-gray-200 rounded-xl text-gray-500 hover:text-black transition-colors">
+          </Button>
+          <Button variant="outline" size="icon">
             <Calendar size={20} />
-          </button>
+          </Button>
         </div>
       </header>
 
@@ -104,61 +98,36 @@ export default function Tasks() {
           placeholder="What needs to be done?"
           className="w-full bg-white border border-gray-200 rounded-2xl px-6 py-4 text-lg focus:ring-2 focus:ring-black/5 transition-all outline-none shadow-sm"
         />
-        <button
+        <Button
           type="submit"
           disabled={!newTask.trim()}
-          className="absolute right-2 top-2 bottom-2 px-6 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 disabled:opacity-50 transition-all"
+          className="absolute right-2 top-2 bottom-2"
         >
           Add Task
-        </button>
+        </Button>
       </form>
 
       {/* Task List */}
       <div className="space-y-3">
         <AnimatePresence mode="popLayout">
           {tasks.map((task) => (
-            <motion.div
-              key={task.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="group bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:border-black/10 transition-all"
-            >
-              <button 
-                onClick={() => toggleTask(task.id, task.completed)}
-                className={`transition-colors ${task.completed ? 'text-emerald-500' : 'text-gray-300 hover:text-gray-400'}`}
-              >
-                {task.completed ? <CheckCircle2 size={24} /> : <Circle size={24} />}
-              </button>
-              
-              <span className={`flex-1 font-medium transition-all ${task.completed ? 'text-gray-400 line-through' : 'text-gray-700'}`}>
-                {task.title}
-              </span>
-
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button 
-                  onClick={() => deleteTask(task.id)}
-                  className="p-2 text-gray-400 hover:text-red-500 transition-colors rounded-lg hover:bg-red-50"
-                >
-                  <Trash2 size={18} />
-                </button>
-                <button className="p-2 text-gray-400 hover:text-black transition-colors rounded-lg hover:bg-gray-50">
-                  <MoreVertical size={18} />
-                </button>
-              </div>
-            </motion.div>
+            <TaskItem 
+              key={task.id} 
+              task={task} 
+              onToggle={toggleTask} 
+              onDelete={deleteTask} 
+            />
           ))}
         </AnimatePresence>
 
         {!loading && tasks.length === 0 && (
-          <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-200">
+          <Card className="text-center py-20 border-dashed">
             <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckSquare className="text-gray-300" size={32} />
             </div>
             <h3 className="text-lg font-bold text-gray-900">All caught up!</h3>
             <p className="text-gray-500">You have no tasks remaining. Enjoy your free time!</p>
-          </div>
+          </Card>
         )}
       </div>
     </div>
